@@ -123,7 +123,11 @@ namespace json {
             Array arr;
             while (pos < json_str.size() && json_str[pos] != ']') {
                 auto value = parse_value();
-                arr.push_back(value.value());
+                if (!value) {
+                    // Handle error: Expected a value
+                    return {}; // Return an empty optional to indicate failure
+                }
+                arr.push_back(value.value()); // Use value() after checking
                 parse_whitespace();
                 if (pos < json_str.size() && json_str[pos] == ',') {
                     pos++;// ,
