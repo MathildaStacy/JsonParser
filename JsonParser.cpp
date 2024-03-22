@@ -166,6 +166,7 @@ namespace json {
 
         auto parse_value() ->std::optional<Value> {
             parse_whitespace();
+            if (pos >= json_str.size()) return {}; // Handle end of string
             switch (json_str[pos]) {
             case 'n':
                 return parse_null();
@@ -186,6 +187,7 @@ namespace json {
 
         auto parse() ->std::optional<Node> {
             parse_whitespace();
+            if (pos >= json_str.size()) return {}; // Handle empty or invalid JSON
             auto value = parse_value();
             if (!value) {
                 return {};
