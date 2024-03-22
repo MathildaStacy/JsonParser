@@ -141,23 +141,33 @@ namespace json {
         auto parse_object() ->std::optional<Value> {
             pos++;// {
             Object obj;
+            parse_whitespace();
             while (pos < json_str.size() && json_str[pos] != '}') {
-                auto key = parse_value();
-                parse_whitespace();
-                if (!std::holds_alternative<String>(key.value())) {
-                    return {};
+                auto key = parse_string(); // Directly parse the key as a string
+                if (!key) {
+                    // Handle error: Expected a string key
+                    return {}; // Return an empty optional to indicate failure
                 }
+                parse_whitespace();
                 if (pos < json_str.size() && json_str[pos] == ':') {
-                    pos++;// ,
+                    pos++; // ,
+                }
+                else {
+                    // Handle error: Expected colon after key
+                    return {}; // Return an empty optional to indicate failure
                 }
                 parse_whitespace();
                 auto val = parse_value();
-                obj[std::get<String>(key.value())] = val.value();
+                if (!val) {
+                    // Handle error: Expected a value
+                    return {}; // Return an empty optional to indicate failure
+                }
+                obj[std::get<String>(*key)] = *val; // Use * to access the value after checking
                 parse_whitespace();
                 if (pos < json_str.size() && json_str[pos] == ',') {
-                    pos++;// ,
+                    pos++; // ,
+                    parse_whitespace();
                 }
-                parse_whitespace();
             }
             pos++;// }
             return obj;
