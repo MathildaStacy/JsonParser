@@ -99,7 +99,7 @@ namespace json {
             }
             else {
                 try {
-                    Int ret = std::stoi(number);
+                    Int ret = std::stoll(number); // Use std::stoll instead of std::stoi for Int type
                     return ret;
                 }
                 catch (...) {
