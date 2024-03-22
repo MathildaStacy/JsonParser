@@ -150,7 +150,7 @@ namespace json {
                 }
                 parse_whitespace();
                 if (pos < json_str.size() && json_str[pos] == ':') {
-                    pos++; // ,
+                    pos++; // ;
                 }
                 else {
                     // Handle error: Expected colon after key
